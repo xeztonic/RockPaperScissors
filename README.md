@@ -1,6 +1,6 @@
 # Odin Project: Rock – Paper – Scissors (Console Version)
 
-A simple **Rock–Paper–Scissors** game written in JavaScript, playable directly in the browser console.
+A simple **Rock–Paper–Scissors** game written in JavaScript, playable directly IN BROWSER - no console :).
 
 ## How It Works
 

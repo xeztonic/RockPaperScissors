@@ -1,72 +1,62 @@
-// computer's choice
 function getComputerChoice() {
-    let choices = ['rock', 'paper', 'scissors'];
-
-    return choices[Math.floor(Math.random() * choices.length)];
+    let choises = ['rock', 'paper', 'scissors'];
+    return choises[Math.floor(Math.random() * choises.length)];
 }
 
-// human's choice
-function getHumanChoice() {
-    let humanChoice = prompt("Hi there! Pick your poison (rock, paper, scissors)");
-    return humanChoice.toLowerCase();
-}
+let computerScore = 0;
+let humanScore = 0;
+let gameOver = false;
 
-computerScore = 0;
-humanScore = 0;
+const resultsDiv = document.querySelector('#results');
+const buttons = document.querySelector('.choice');
 
-// play round 
-function playRound(computerChoice, humanChoice) {
-    if (computerChoice === 'rock' && humanChoice === 'rock')
-        return 'Tie! Try again!';
-    if (computerChoice === 'rock' && humanChoice === 'paper') {
+// play a single round
+function playRound(humanChoice, computerChoice) {
+    if (humanChoice === computerChoice)
+        return `Tie! you both picked ${humanChoice}`;
+    if (
+        (humanChoice === 'rock' && computerChoice === 'scissors') ||
+        (humanChoice === 'paper' && computerChoice === 'rock') ||
+        (humanChoice === 'scissors' && computerChoice === 'paper')
+    ) {
         humanScore++;
-        return 'You won this round! Paper beats Rock';
-    }
-    if (computerChoice === 'rock' && humanChoice === 'scissors') {
+        return `You won this round! ${humanChoice} beats ${computerChoice}.`;
+    } else {
         computerScore++;
-        return 'You lost this round! Rock beats Scissors';
+        return `You lost this round! ${computerChoice} beats ${humanChoice}.`;
     }
-
-    if (computerChoice === 'paper' && humanChoice === 'rock') {
-        computerScore++;
-        return 'You lost this round!  Paper beats Rock';
-    }
-    if (computerChoice === 'paper' && humanChoice === 'paper')
-        return 'Tie! Try again!';
-    if (computerChoice === 'paper' && humanChoice === 'scissors') {
-        humanScore++;
-        return 'You won this round! Scissors beats Paper';
-    }
-
-    if (computerChoice === 'scissors' && humanChoice === 'rock') {
-        humanScore++;
-        return 'You won this round! Rock beats Scissors';
-    }
-    if (computerChoice === 'scissors' && humanChoice === 'paper') {
-        computerScore++;
-        return 'You lost this round! Scissors beats Paper';
-    }
-    if (computerChoice === 'scissors' && humanChoice === 'scissors')
-        return 'Tie! Try again!';
 }
 
-for (let i = 0; i < 5; i++) {
-    let computerChoice = getComputerChoice();
-    let humanChoice = getHumanChoice();
+// handle button click
+buttons.addEventListener('click', () => {
+    if (gameOver) return;
 
-    console.log(`Round ${i + 1}`);
-    console.log(`Computer choosed: ${computerChoice}`);
-    console.log(`Human choosed: ${humanChoice}`);
+    const humanChoice = button.getAttribute('data-choice');
+    const computerChoice = getComputerChoice();
 
-    let roundResult = playRound(computerChoice, humanChoice);
-    console.log(roundResult);
-    console.log(`Computer's score: ${computerScore}`);
-    console.log(`Humans's score: ${humanScore}`);
-}
+    const roundResult = playRound(humanChoice, computerChoice);
 
-if (computerScore > humanScore)
-    console.log('Computer won!');
-else if (humanScore > computerScore)
-    console.log('You won!');
-else
-    console.log("TIE!");
+    let scoreText = `Score — You: ${humanScore} | Computer: ${computerScore}`;
+
+    let message = `
+        You chose: ${humanChoice}<br>
+        Computer chose: ${computerChoice}<br>
+        ${roundResult}<br>
+        ${scoreText}
+    `;
+
+    // check for game winner
+    if (humanScore === 5 || computerScore === 5) {
+        gameOver = true;
+
+        if (humanScore === 5 && computerScore === 5) {
+            message += `<br><strong>Game over! It's a tie.</strong>`;
+        } else if (humanScore === 5) {
+            message += `<br><strong>You won the game!</strong>`;
+        } else {
+            message += `<br><strong>Computer won the game!</strong>`;
+        }
+    }
+
+    resultsDiv.innerHTML = message;
+});
